@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Login — CerebroX AI{% endblock %}
+{% block content %}
+<div class="max-w-md mx-auto py-14">
+  <div class="glass p-8">
+    <h1 class="font-display text-2xl font-bold mb-1">Welcome back</h1>
+    <p class="text-sm mb-6" style="color:var(--txt-dim)">Login to continue your learning.</p>
+    <form method="post" class="flex flex-col gap-4">
+      {% csrf_token %}
+      <div>
+        <label class="label">Username or email</label>
+        <input class="field" type="text" name="username" required autofocus>
+      </div>
+      <div>
+        <label class="label">Password</label>
+        <input class="field" type="password" name="password" required>
+      </div>
+      <button class="btn btn-primary w-full mt-2" type="submit">Login</button>
+    </form>
+    <p class="text-sm mt-5 text-center" style="color:var(--txt-dim)">
+      No account? <a href="{% url 'accounts:register' %}" class="grad-text font-medium">Register</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

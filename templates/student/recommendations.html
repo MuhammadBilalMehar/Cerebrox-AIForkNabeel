@@ -1,0 +1,10 @@
+{% extends "layouts/dashboard_layout.html" %}
+{% block title %}Recommendations — CerebroX AI{% endblock %}
+{% block content %}
+<h1 class="font-display text-2xl font-bold mb-6">Personalized recommendations</h1>
+<div class="grid md:grid-cols-2 gap-4">
+  {% for rec in recommendations %}{% include "components/recommendation_card.html" %}{% empty %}
+    <p style="color:var(--txt-faint)">Take a few quizzes to unlock recommendations.</p>
+  {% endfor %}
+</div>
+{% endblock %}

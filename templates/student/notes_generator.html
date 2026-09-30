@@ -1,0 +1,17 @@
+{% extends "layouts/dashboard_layout.html" %}
+{% block title %}Generate Notes — {{ topic.name }}{% endblock %}
+{% block content %}
+<h1 class="font-display text-2xl font-bold mb-1">Generate AI notes</h1>
+<p class="mb-1" style="color:var(--txt-dim)">{{ topic.course.name }} → {{ topic.name }}</p>
+<p class="mb-6 text-sm" style="color:var(--txt-faint)">Notes will be pitched to your study level: <strong>{{ user.effective_study_level }}</strong> (<a href="{% url 'accounts:profile' %}" class="grad-text">change it</a>)</p>
+<div class="glass p-6 max-w-lg">
+  <form method="post" class="flex flex-col gap-4">
+    {% csrf_token %}
+    {% if error %}
+      <div class="alert alert-error" role="alert">AI Error: {{ error }}</div>
+    {% endif %}
+    <div><label class="label">Preferred length</label>{{ form.length }}</div>
+    <button class="btn btn-primary w-max mt-2" type="submit">✨ Generate notes</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "layouts/dashboard_layout.html" %}
+{% block title %}My Courses — CerebroX AI{% endblock %}
+{% block content %}
+<h1 class="font-display text-2xl font-bold mb-1">My Courses</h1>
+<p class="mb-6" style="color:var(--txt-dim)">Add the courses you personally want to study and practice — nothing here is predefined.</p>
+
+<div class="grid md:grid-cols-3 gap-6">
+  <div class="md:col-span-2 grid sm:grid-cols-2 gap-4">
+    {% for c in courses %}
+      <div class="glass p-5">
+        <a href="{% url 'learning:topics' c.id %}" class="block">
+          <p class="text-2xl">{{ c.icon }}</p>
+          <p class="font-display font-semibold mt-2">{{ c.name }}</p>
+          <p class="text-sm mt-1" style="color:var(--txt-dim)">{{ c.topic_count }} topics</p>
+        </a>
+        <div class="flex flex-wrap gap-3 mt-3">
+          <a href="{% url 'learning:topics' c.id %}" class="text-xs grad-text">View Topics</a>
+          <a href="{% url 'learning:topics' c.id %}" class="text-xs grad-text">Manage Topics</a>
+          <a href="{% url 'learning:course_edit' c.id %}" class="text-xs grad-text">Edit Course</a>
+          <a href="{% url 'learning:course_delete' c.id %}" class="text-xs" style="color:var(--bad)" onclick="return confirm('Delete this course and all its topics?')">Delete</a>
+        </div>
+      </div>
+    {% empty %}
+      <p style="color:var(--txt-faint)" class="sm:col-span-2">You haven't added any courses yet — use the form to add your first one.</p>
+    {% endfor %}
+  </div>
+
+  <div class="glass p-5 h-max">
+    <h2 class="font-display font-semibold mb-4">{% if editing %}Edit course{% else %}Add a course{% endif %}</h2>
+    <form method="post" action="{% if editing %}{% url 'learning:course_edit' editing.id %}{% else %}{% url 'learning:courses' %}{% endif %}" class="flex flex-col gap-3">
+      {% csrf_token %}
+      <div><label class="label">Name</label>{{ form.name }}</div>
+      <div><label class="label">Icon / emoji</label>{{ form.icon }}</div>
+      <div><label class="label">Description</label>{{ form.description }}</div>
+      <div>
+        <label class="label">Add topics</label>
+        {{ form.topics_raw }}
+        <p class="text-xs mt-1" style="color:var(--txt-faint)">Add one topic per line or separate with commas.</p>
+      </div>
+      <button class="btn btn-primary mt-2" type="submit">{% if editing %}Save changes{% else %}Add course{% endif %}</button>
+    </form>
+  </div>
+</div>
+
+{% if courses %}
+<a href="{% url 'dashboard:home' %}" class="btn btn-ghost mt-8 w-max">Continue to dashboard →</a>
+{% endif %}
+{% endblock %}

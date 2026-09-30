@@ -1,0 +1,35 @@
+{% extends "layouts/admin_layout.html" %}
+{% block title %}{{ student.username }} — Admin{% endblock %}
+{% block content %}
+<a href="{% url 'admin_panel:students' %}" class="text-sm grad-text">&larr; All students</a>
+<h1 class="font-display text-2xl font-bold mt-2 mb-1">{{ student.first_name }} {{ student.last_name }} ({{ student.username }})</h1>
+<p class="mb-6 text-sm" style="color:var(--txt-faint)">{{ student.email }} &middot; Study level: {{ student.effective_study_level }}</p>
+
+<div class="grid sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+  {% include "components/stat_card.html" with label="Total Quizzes" value=overview.total_quizzes %}
+  {% include "components/stat_card.html" with label="Average" value=overview.average_score|floatformat:0 %}
+  {% include "components/stat_card.html" with label="Highest" value=overview.highest_score|floatformat:0 %}
+  {% include "components/stat_card.html" with label="Courses" value=courses|length %}
+</div>
+
+<div class="grid md:grid-cols-2 gap-6">
+  <div class="glass p-6">
+    <h2 class="font-display font-semibold mb-4">Courses</h2>
+    {% for c in courses %}
+      <div class="flex justify-between py-2 border-b" style="border-color:var(--line)">
+        <span class="text-sm">{{ c.icon }} {{ c.name }}</span>
+        <span class="text-xs" style="color:var(--txt-faint)">{{ c.topic_count }} topics</span>
+      </div>
+    {% empty %}<p class="text-sm" style="color:var(--txt-faint)">No courses added yet.</p>{% endfor %}
+  </div>
+  <div class="glass p-6">
+    <h2 class="font-display font-semibold mb-4">Weak topics</h2>
+    {% for t in weak.weak %}
+      <div class="flex justify-between py-2 border-b" style="border-color:var(--line)">
+        <span class="text-sm">{{ t.topic__name }}</span>
+        <span class="pill pill-hard">{{ t.avg_score|floatformat:0 }}%</span>
+      </div>
+    {% empty %}<p class="text-sm" style="color:var(--txt-faint)">None detected.</p>{% endfor %}
+  </div>
+</div>
+{% endblock %}

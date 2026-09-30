@@ -1,0 +1,43 @@
+{% extends "layouts/dashboard_layout.html" %}
+{% block title %}Notes — CerebroX AI{% endblock %}
+{% block content %}
+<h1 class="font-display text-2xl font-bold mb-1">Notes</h1>
+<p class="mb-6" style="color:var(--txt-dim)">Generate AI study notes for one of your courses and topics.</p>
+
+<div class="glass p-6 max-w-2xl">
+  <form method="post" class="flex flex-col gap-4">
+    {% csrf_token %}
+    {% if error %}
+      <div class="alert alert-error" role="alert">AI Error: {{ error }}</div>
+    {% endif %}
+    <div>
+      <label class="label">Course</label>
+      {{ form.course }}
+    </div>
+    <div>
+      <label class="label">Select topic</label>
+      {{ form.topic }}
+    </div>
+    <div>
+      <label class="label">Or enter a topic name</label>
+      {{ form.topic_name }}
+    </div>
+    <div>
+      <label class="label">Length</label>
+      {{ form.length }}
+    </div>
+    <button type="submit" class="btn btn-primary w-max mt-2">✨ Generate Notes</button>
+  </form>
+</div>
+
+{% if courses %}
+<div class="mt-8 grid md:grid-cols-2 gap-4">
+  {% for course in courses %}
+    <div class="glass-soft p-4">
+      <p class="font-display font-semibold">{{ course.icon }} {{ course.name }}</p>
+      <p class="text-sm mt-1" style="color:var(--txt-dim)">{{ course.topic_count }} topics available</p>
+    </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

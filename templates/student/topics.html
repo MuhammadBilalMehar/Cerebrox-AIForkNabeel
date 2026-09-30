@@ -1,0 +1,35 @@
+{% extends "layouts/dashboard_layout.html" %}
+{% block title %}{{ course.name }} Topics — CerebroX AI{% endblock %}
+{% block content %}
+<a href="{% url 'learning:courses' %}" class="text-sm grad-text">&larr; My Courses</a>
+<h1 class="font-display text-2xl font-bold mt-2 mb-6">{{ course.icon }} {{ course.name }}</h1>
+
+<div class="grid md:grid-cols-3 gap-6">
+  <div class="md:col-span-2 grid sm:grid-cols-2 gap-4">
+    {% for t in topics %}
+      <div class="glass p-5">
+        <a href="{% url 'learning:topic_detail' t.id %}" class="block">
+          <p class="font-display font-semibold">{{ t.name }}</p>
+          <p class="text-sm mt-1" style="color:var(--txt-dim)">{{ t.description|truncatewords:16 }}</p>
+        </a>
+        <div class="flex gap-3 mt-3">
+          <a href="{% url 'learning:topic_edit' t.id %}" class="text-xs grad-text">Edit</a>
+          <a href="{% url 'learning:topic_delete' t.id %}" class="text-xs" style="color:var(--bad)" onclick="return confirm('Delete this topic?')">Delete</a>
+        </div>
+      </div>
+    {% empty %}
+      <p style="color:var(--txt-faint)" class="sm:col-span-2">No topics in this course yet — add one to get started.</p>
+    {% endfor %}
+  </div>
+
+  <div class="glass p-5 h-max">
+    <h2 class="font-display font-semibold mb-4">{% if editing %}Edit topic{% else %}Add a topic{% endif %}</h2>
+    <form method="post" action="{% if editing %}{% url 'learning:topic_edit' editing.id %}{% else %}{% url 'learning:topics' course.id %}{% endif %}" class="flex flex-col gap-3">
+      {% csrf_token %}
+      <div><label class="label">Name</label>{{ form.name }}</div>
+      <div><label class="label">Description</label>{{ form.description }}</div>
+      <button class="btn btn-primary mt-2" type="submit">{% if editing %}Save changes{% else %}Add topic{% endif %}</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

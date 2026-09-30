@@ -1,0 +1,11 @@
+<aside id="sidebar" class="hidden md:block w-60 shrink-0 border-r px-4 py-6" style="border-color:var(--line);">
+  <nav class="flex flex-col gap-1">
+    <a href="{% url 'dashboard:home' %}" class="navlink {% if request.resolver_match.view_name == 'dashboard:home' %}active{% endif %}">📊 Dashboard</a>
+    <a href="{% url 'learning:courses' %}" class="navlink {% if request.resolver_match.view_name == 'learning:courses' %}active{% endif %}">📚 My Courses</a>
+    <a href="{% url 'learning:notes_dashboard' %}" class="navlink {% if request.resolver_match.view_name == 'learning:notes_dashboard' %}active{% endif %}">📝 Notes</a>
+    <a href="{% url 'quizzes:dashboard_generate' %}" class="navlink {% if request.resolver_match.view_name == 'quizzes:dashboard_generate' %}active{% endif %}">🧠 Quiz</a>
+    <a href="{% url 'analytics:performance' %}" class="navlink">📈 Performance</a>
+    <a href="{% url 'analytics:recommendations' %}" class="navlink">💡 Recommendations</a>
+    <a href="{% url 'accounts:profile' %}" class="navlink">👤 Profile</a>
+  </nav>
+</aside>

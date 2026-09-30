@@ -1,0 +1,30 @@
+{% extends "layouts/dashboard_layout.html" %}
+{% block title %}{{ topic.name }} — CerebroX AI{% endblock %}
+{% block content %}
+<a href="{% url 'learning:topics' topic.course.id %}" class="text-sm grad-text">&larr; {{ topic.course.name }}</a>
+<h1 class="font-display text-2xl font-bold mt-2 mb-2">{{ topic.name }}</h1>
+<p class="mb-6" style="color:var(--txt-dim)">{{ topic.description }}</p>
+
+<div class="grid md:grid-cols-2 gap-4 mb-8">
+  <a href="{% url 'learning:notes_generate' topic.id %}" class="glass glass-hover p-6">
+    <p class="font-display font-semibold">📝 Generate AI notes</p>
+    <p class="text-sm mt-1" style="color:var(--txt-dim)">Get a structured explanation of this topic.</p>
+  </a>
+  <a href="{% url 'quizzes:generate' topic.id %}" class="glass glass-hover p-6">
+    <p class="font-display font-semibold">🧠 Generate a quiz</p>
+    <p class="text-sm mt-1" style="color:var(--txt-dim)">AI-generated MCQs, auto-scored.</p>
+  </a>
+</div>
+
+<h2 class="font-display font-semibold mb-3">Your recent notes on this topic</h2>
+<div class="flex flex-col gap-3">
+  {% for n in notes %}
+    <a href="{% url 'learning:notes_view' n.id %}" class="glass-soft p-4 flex justify-between items-center">
+      <span class="text-sm">{{ n.created_at|date:"M d, Y H:i" }} — {{ n.difficulty }}</span>
+      <span class="grad-text text-sm">View →</span>
+    </a>
+  {% empty %}
+    <p class="text-sm" style="color:var(--txt-faint)">No notes generated yet.</p>
+  {% endfor %}
+</div>
+{% endblock %}

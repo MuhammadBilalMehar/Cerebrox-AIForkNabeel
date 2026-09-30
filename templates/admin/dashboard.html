@@ -1,0 +1,15 @@
+{% extends "layouts/admin_layout.html" %}
+{% block title %}Admin — CerebroX AI{% endblock %}
+{% block content %}
+<h1 class="font-display text-2xl font-bold mb-6">Admin overview</h1>
+<div class="grid sm:grid-cols-2 md:grid-cols-4 gap-4">
+  {% include "components/stat_card.html" with label="Total Students" value=total_students %}
+  {% include "components/stat_card.html" with label="Total Courses" value=total_courses %}
+  {% include "components/stat_card.html" with label="Total Topics" value=total_topics %}
+  {% include "components/stat_card.html" with label="Total Quizzes" value=total_quizzes %}
+</div>
+<p class="text-sm mt-4" style="color:var(--txt-faint)">Courses and topics are created by each student individually — there's nothing global to manage here. Use Students to review any student's own courses and performance.</p>
+<div class="flex gap-3 mt-8">
+  <a href="{% url 'admin_panel:students' %}" class="btn btn-ghost">View students</a>
+</div>
+{% endblock %}

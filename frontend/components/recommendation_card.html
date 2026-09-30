@@ -1,0 +1,7 @@
+<div class="glass p-5">
+  <div class="flex items-center justify-between mb-2">
+    <p class="font-display font-semibold">{{ rec.topic }}</p>
+    <span class="pill {% if rec.status == 'Strong' %}pill-easy{% elif rec.status == 'Needs Practice' %}pill-medium{% else %}pill-hard{% endif %}">{{ rec.status }}</span>
+  </div>
+  <p class="text-sm" style="color:var(--txt-dim)">{{ rec.message }}</p>
+</div>

@@ -1,0 +1,91 @@
+from django import forms
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from .models import User
+
+
+class StyledFormMixin:
+    """Applies the project's `.field` CSS class to every widget automatically,
+    so templates can just do `{{ form.some_field }}` without repeating attrs."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            existing = field.widget.attrs.get('class', '')
+            field.widget.attrs['class'] = (existing + ' field').strip()
+            if isinstance(field.widget, forms.Textarea):
+                field.widget.attrs.setdefault('rows', 3)
+
+
+class RegisterForm(StyledFormMixin, UserCreationForm):
+    first_name = forms.CharField(max_length=150, required=True)
+    last_name = forms.CharField(max_length=150, required=False)
+    email = forms.EmailField(required=True)
+    study_level = forms.ChoiceField(choices=User.StudyLevel.choices, initial=User.StudyLevel.UNDERGRADUATE)
+    study_level_custom = forms.CharField(
+        max_length=60, required=False,
+        help_text="Only needed if you selected 'Other' above.",
+    )
+
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'email',
+                   'study_level', 'study_level_custom', 'password1', 'password2')
+
+    def clean(self):
+        cleaned = super().clean()
+        if cleaned.get('study_level') == User.StudyLevel.OTHER and not cleaned.get('study_level_custom'):
+            self.add_error('study_level_custom', "Please describe your study level.")
+        return cleaned
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.role = User.Role.STUDENT
+        user.email = self.cleaned_data['email']
+        user.study_level = self.cleaned_data['study_level']
+        user.study_level_custom = self.cleaned_data.get('study_level_custom', '')
+        if commit:
+            user.save()
+        return user
+
+
+class LoginForm(StyledFormMixin, AuthenticationForm):
+    username = forms.CharField(label='Username or email')
+
+
+class ProfileForm(StyledFormMixin, forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'email', 'bio', 'avatar', 'study_level', 'study_level_custom')
+
+    def clean(self):
+        cleaned = super().clean()
+        if cleaned.get('study_level') == User.StudyLevel.OTHER and not cleaned.get('study_level_custom'):
+            self.add_error('study_level_custom', "Please describe your study level.")
+        return cleaned
+
+
+class AdminPasswordChangeForm(StyledFormMixin, forms.Form):
+    old_password = forms.CharField(widget=forms.PasswordInput)
+    new_password1 = forms.CharField(widget=forms.PasswordInput, min_length=8)
+    new_password2 = forms.CharField(widget=forms.PasswordInput, min_length=8)
+
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        super().__init__(*args, **kwargs)
+
+    def clean_old_password(self):
+        if not self.user.check_password(self.cleaned_data['old_password']):
+            raise forms.ValidationError('Your current password is incorrect.')
+        return self.cleaned_data['old_password']
+
+    def clean(self):
+        cleaned = super().clean()
+        p1, p2 = cleaned.get('new_password1'), cleaned.get('new_password2')
+        if p1 and p2 and p1 != p2:
+            raise forms.ValidationError("The two new passwords don't match.")
+        return cleaned
+
+    def save(self):
+        self.user.set_password(self.cleaned_data['new_password1'])
+        self.user.save()
+        return self.user

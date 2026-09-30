@@ -1,0 +1,24 @@
+{% extends "layouts/admin_layout.html" %}
+{% block title %}Students — Admin{% endblock %}
+{% block content %}
+<h1 class="font-display text-2xl font-bold mb-6">Students ({{ students|length }})</h1>
+<div class="glass overflow-hidden">
+  <table class="w-full text-sm">
+    <thead><tr class="text-left border-b" style="border-color:var(--line)">
+      <th class="p-3">Name</th><th class="p-3">Username</th><th class="p-3">Study Level</th><th class="p-3">XP</th><th class="p-3">Joined</th><th class="p-3"></th>
+    </tr></thead>
+    <tbody>
+      {% for s in students %}
+      <tr class="border-b" style="border-color:var(--line)">
+        <td class="p-3">{{ s.first_name }} {{ s.last_name }}</td>
+        <td class="p-3">{{ s.username }}</td>
+        <td class="p-3">{{ s.effective_study_level }}</td>
+        <td class="p-3">{{ s.xp_points }}</td>
+        <td class="p-3">{{ s.created_at|date:"M d, Y" }}</td>
+        <td class="p-3"><a href="{% url 'admin_panel:student_detail' s.id %}" class="text-xs grad-text">View →</a></td>
+      </tr>
+      {% empty %}<tr><td class="p-3" colspan="6">No students yet.</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

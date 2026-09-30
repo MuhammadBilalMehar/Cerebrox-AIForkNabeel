@@ -1,0 +1,34 @@
+{% extends "layouts/dashboard_layout.html" %}
+{% block title %}Performance — CerebroX AI{% endblock %}
+{% block content %}
+<h1 class="font-display text-2xl font-bold mb-6">Your performance</h1>
+
+<div class="grid sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+  {% include "components/stat_card.html" with label="Total Quizzes" value=overview.total_quizzes %}
+  {% include "components/stat_card.html" with label="Average" value=overview.average_score|floatformat:0|add:"%" %}
+  {% include "components/stat_card.html" with label="Highest" value=overview.highest_score|floatformat:0|add:"%" %}
+  {% include "components/stat_card.html" with label="Lowest" value=overview.lowest_score|floatformat:0|add:"%" %}
+</div>
+
+<div class="grid md:grid-cols-2 gap-6">
+  <div class="glass p-6">
+    <h2 class="font-display font-semibold mb-4">Course-wise</h2>
+    {% for s in courses %}
+      <div class="mb-3">
+        <div class="flex justify-between text-sm mb-1"><span>{{ s.topic__course__name }}</span><span>{{ s.avg_score|floatformat:0 }}%</span></div>
+        <div class="bar-track"><div class="bar-fill" data-w="{{ s.avg_score|floatformat:0 }}" style="width:0%"></div></div>
+      </div>
+    {% empty %}<p class="text-sm" style="color:var(--txt-faint)">No data yet.</p>{% endfor %}
+  </div>
+  <div class="glass p-6">
+    <h2 class="font-display font-semibold mb-4">Topic-wise</h2>
+    {% for t in topics %}
+      <div class="flex justify-between items-center py-2 border-b" style="border-color:var(--line)">
+        <span class="text-sm">{{ t.topic__name }}</span>
+        <span class="pill {% if t.avg_score >= 70 %}pill-easy{% elif t.avg_score >= 50 %}pill-medium{% else %}pill-hard{% endif %}">{{ t.avg_score|floatformat:0 }}%</span>
+      </div>
+    {% empty %}<p class="text-sm" style="color:var(--txt-faint)">No data yet.</p>{% endfor %}
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}<script src="{% load static %}{% static 'js/dashboard.js' %}"></script>{% endblock %}

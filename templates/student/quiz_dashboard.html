@@ -1,0 +1,29 @@
+{% extends "layouts/dashboard_layout.html" %}
+{% block title %}Quiz — CerebroX AI{% endblock %}
+{% block content %}
+<h1 class="font-display text-2xl font-bold mb-1">Quiz</h1>
+<p class="mb-6" style="color:var(--txt-dim)">Create a quiz from your course topics using your study level, difficulty, and question count.</p>
+
+<div class="glass p-6 max-w-2xl">
+  <form method="post" class="flex flex-col gap-4">
+    {% csrf_token %}
+    <div>
+      <label class="label">Course</label>
+      {{ form.course }}
+    </div>
+    <div>
+      <label class="label">Topics</label>
+      {{ form.topics }}
+    </div>
+    <div>
+      <label class="label">Difficulty</label>
+      {{ form.difficulty }}
+    </div>
+    <div>
+      <label class="label">Number of questions</label>
+      {{ form.num_questions }}
+    </div>
+    <button type="submit" class="btn btn-primary w-max mt-2">🧠 Generate Quiz</button>
+  </form>
+</div>
+{% endblock %}

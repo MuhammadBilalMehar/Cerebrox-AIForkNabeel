@@ -1,0 +1,15 @@
+{% extends "layouts/dashboard_layout.html" %}
+{% block title %}Generate Quiz — {{ topic.name }}{% endblock %}
+{% block content %}
+<h1 class="font-display text-2xl font-bold mb-1">Generate a quiz</h1>
+<p class="mb-1" style="color:var(--txt-dim)">{{ topic.course.name }} → {{ topic.name }}</p>
+<p class="mb-6 text-sm" style="color:var(--txt-faint)">Study level: <strong>{{ user.effective_study_level }}</strong></p>
+<div class="glass p-6 max-w-lg">
+  <form method="post" class="flex flex-col gap-4">
+    {% csrf_token %}
+    <div><label class="label">Difficulty</label>{{ form.difficulty }}</div>
+    <div><label class="label">Number of questions</label>{{ form.num_questions }}</div>
+    <button class="btn btn-primary w-max mt-2" type="submit">🧠 Generate &amp; start quiz</button>
+  </form>
+</div>
+{% endblock %}

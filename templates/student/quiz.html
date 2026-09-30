@@ -1,0 +1,47 @@
+{% extends "layouts/dashboard_layout.html" %}
+{% block title %}Quiz — {{ quiz.topic.name }}{% endblock %}
+{% block content %}
+<div class="flex items-center justify-between mb-4">
+  <div>
+    <h1 class="font-display text-xl font-bold">{{ quiz.topic.name }}</h1>
+    <p class="text-sm" style="color:var(--txt-faint)">{{ quiz.total_questions }} questions &middot; {{ quiz.difficulty }}</p>
+  </div>
+  <div id="timer" class="glass-soft px-4 py-2 font-display font-semibold" style="border-color:var(--line)">
+    ⏱ <span id="time">--:--</span>
+  </div>
+</div>
+
+<form method="post" action="{% url 'quizzes:submit' quiz.id %}" id="quiz-form">
+  {% csrf_token %}
+  <div class="grid gap-4">
+    {% for a in answers %}
+      <div class="glass p-5">
+        <p class="font-medium mb-3">{{ forloop.counter }}. {{ a.question.question }}</p>
+        <div class="grid sm:grid-cols-2 gap-2">
+          {% for key, text in a.question.options %}
+            <label class="opt">
+              <input type="radio" name="question_{{ a.question.id }}" value="{{ key }}" class="hidden">
+              <span class="key">{{ key }}</span><span>{{ text }}</span>
+            </label>
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  <button type="submit" class="btn btn-primary mt-6" id="submit-quiz">Submit quiz</button>
+</form>
+{% endblock %}
+{% block extra_js %}
+<script src="{% load static %}{% static 'js/quiz.js' %}"></script>
+<script>
+  document.querySelectorAll('.opt').forEach(label=>{
+    label.addEventListener('click', ()=>{
+      const group = label.querySelector('input').name;
+      document.querySelectorAll(`input[name="${group}"]`).forEach(i=> i.closest('.opt').classList.remove('sel'));
+      label.classList.add('sel');
+      label.querySelector('input').checked = true;
+    });
+  });
+  startQuizTimer({{ quiz.duration_seconds }}, 'quiz-form');
+</script>
+{% endblock %}

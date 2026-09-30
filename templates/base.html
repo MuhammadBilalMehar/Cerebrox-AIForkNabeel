@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}CerebroX AI{% endblock %}</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/theme.css' %}">
+</head>
+<body>
+  <div id="toast-root"></div>
+  {% include "components/navbar.html" %}
+  <div class="flex">
+    {% block sidebar %}{% endblock %}
+    <main class="flex-1 min-w-0 px-4 md:px-8 py-6 max-w-7xl mx-auto w-full">
+      {% include "components/alert.html" %}
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+  {% include "components/footer.html" %}
+  <script src="{% static 'js/main.js' %}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

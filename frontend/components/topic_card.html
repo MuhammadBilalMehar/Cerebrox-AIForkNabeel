@@ -1,0 +1,4 @@
+<a href="{% url 'learning:topic_detail' topic.id %}" class="glass glass-hover p-5 block">
+  <p class="font-display font-semibold">{{ topic.name }}</p>
+  <p class="text-sm mt-1" style="color:var(--txt-dim)">{{ topic.description|truncatewords:16 }}</p>
+</a>

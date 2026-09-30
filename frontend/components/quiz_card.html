@@ -1,0 +1,9 @@
+<div class="glass p-5 flex items-center justify-between">
+  <div>
+    <p class="font-medium">{{ quiz.topic.name }}</p>
+    <p class="text-xs" style="color:var(--txt-faint)">{{ quiz.created_at|date:"M d, Y" }}</p>
+  </div>
+  <span class="pill {% if quiz.percentage >= 70 %}pill-easy{% elif quiz.percentage >= 50 %}pill-medium{% else %}pill-hard{% endif %}">
+    {{ quiz.percentage|floatformat:0 }}%
+  </span>
+</div>

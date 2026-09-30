@@ -1,0 +1,36 @@
+{% extends "layouts/dashboard_layout.html" %}
+{% block title %}Notes — {{ note.topic.name }}{% endblock %}
+{% block content %}
+<a href="{% url 'learning:topic_detail' note.topic.id %}" class="text-sm grad-text">&larr; {{ note.topic.name }}</a>
+<h1 class="font-display text-2xl font-bold mt-2 mb-1">{{ note.topic.name }}</h1>
+<p class="mb-6 text-sm" style="color:var(--txt-faint)">
+  {{ note.study_level }} level &middot; generated {{ note.created_at|date:"M d, Y H:i" }}
+  {% if note.content.generated_by == "offline-fallback" %}&middot; <span style="color:var(--warn)">offline fallback (no AI key configured)</span>{% endif %}
+</p>
+
+<div class="glass p-6 flex flex-col gap-6 max-w-3xl">
+  <div><h2 class="font-display font-semibold mb-2">Introduction</h2><p style="color:var(--txt-dim)">{{ note.content.introduction }}</p></div>
+  <div><h2 class="font-display font-semibold mb-2">Explanation</h2><p style="color:var(--txt-dim)">{{ note.content.explanation }}</p></div>
+  <div>
+    <h2 class="font-display font-semibold mb-2">Key terms</h2>
+    <ul class="list-disc list-inside" style="color:var(--txt-dim)">
+      {% for term in note.content.key_terms %}<li>{{ term }}</li>{% endfor %}
+    </ul>
+  </div>
+  <div>
+    <h2 class="font-display font-semibold mb-2">Examples</h2>
+    <ul class="list-disc list-inside" style="color:var(--txt-dim)">
+      {% for ex in note.content.examples %}<li>{{ ex }}</li>{% endfor %}
+    </ul>
+  </div>
+  <div>
+    <h2 class="font-display font-semibold mb-2">Important points</h2>
+    <ul class="list-disc list-inside" style="color:var(--txt-dim)">
+      {% for p in note.content.important_points %}<li>{{ p }}</li>{% endfor %}
+    </ul>
+  </div>
+  <div><h2 class="font-display font-semibold mb-2">Summary</h2><p style="color:var(--txt-dim)">{{ note.content.summary }}</p></div>
+</div>
+
+<a href="{% url 'quizzes:generate' note.topic.id %}" class="btn btn-primary mt-6 w-max">Practice with a quiz →</a>
+{% endblock %}
